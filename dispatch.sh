@@ -1,4 +1,4 @@
-
+set -e
 yum install golang -y
 
 useradd roboshop
