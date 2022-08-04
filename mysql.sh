@@ -17,6 +17,7 @@ mysql -uroot -pRoboShop@1
 curl -s -L -o /tmp/mysql.zip "https://github.com/roboshop-devops-project/mysql/archive/main.zip"
 
 cd /tmp
+rm -rf mysql
 unzip -o mysql.zip
 cd mysql-main
 mysql -u root -pRoboShop@1 <shipping.sql
