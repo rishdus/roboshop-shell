@@ -4,16 +4,16 @@ if [ $? -eq 0 ]; then
   echo -e "\e[32mSUCCESS\e[0m"
 else
   echo -e "\e[31mFAILURE\e[0m"
-  exit
+  exit 1
 fi
 
 echo installing nodejs
-yum install nodejs -y &>>/tmp/cart.log
+yum install nodejs -y &>>/tmp/cart.log 
 if [ $? -eq 0 ]; then
   echo -e "\e[32mSUCCESS\e[0m"
 else
   echo -e "\e[31mFAILURE\e[0m"
-  exit
+  exit 1
 fi
 
 echo adding application user
@@ -22,7 +22,7 @@ if [ $? -eq 0 ]; then
   echo -e "\e[32mSUCCESS\e[0m"
 else
   echo -e "\e[31mFAILURE\e[0m"
-  exit
+  exit 1
 fi
 
 echo downloading application content
@@ -33,7 +33,7 @@ if [ $? -eq 0 ]; then
   echo -e "\e[32mSUCCESS\e[0m"
 else
   echo -e "\e[31mFAILURE\e[0m"
-  exit
+  exit 1
 fi
 
 echo cleaning old application content
@@ -42,7 +42,7 @@ if [ $? -eq 0 ]; then
   echo -e "\e[32mSUCCESS\e[0m"
 else
   echo -e "\e[31mFAILURE\e[0m"
-  exit
+  exit 1
 fi
 
 echo extracting application archive
@@ -53,7 +53,7 @@ if [ $? -eq 0 ]; then
   echo -e "\e[32mSUCCESS\e[0m"
 else
   echo -e "\e[31mFAILURE\e[0m"
-  exit
+  exit 1
 fi
 
 echo installing nodejs dependencies
@@ -62,7 +62,7 @@ if [ $? -eq 0 ]; then
   echo -e "\e[32mSUCCESS\e[0m"
 else
   echo -e "\e[31mFAILURE\e[0m"
-  exit
+  exit 1
 fi
 
 echo configuring cart systemd service
@@ -72,7 +72,7 @@ if [ $? -eq 0 ]; then
   echo -e "\e[32mSUCCESS\e[0m"
 else
   echo -e "\e[31mFAILURE\e[0m"
-  exit
+  exit 1
 fi
 
 echo starting cart service
@@ -82,5 +82,5 @@ if [ $? -eq 0 ]; then
   echo -e "\e[32mSUCCESS\e[0m"
 else
   echo -e "\e[31mFAILURE\e[0m"
-  exit
+  exit 1
 fi
