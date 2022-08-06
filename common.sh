@@ -42,4 +42,12 @@ NODEJS() {
   echo Installing Nodejs dependencies
   npm install &>>/tmp/${COMPONENT}.log
   StatusCheck
+  
+  echo configuring ${COMPONENT} systemd service
+  mv /home/roboshop/${COMPONENT}/systemd.service /etc/systemd/system/${COMPONENT}.service &>>/tmp/${COMPONENT}.log && systemctl daemon-reload &>>/tmp/${COMPONENT}.log
+  StatusCheck
+  
+  echo starting ${COMPONENT} service
+  systemctl start ${COMPONENT} &>>/tmp/${COMPONENT}.log && systemctl enable ${COMPONENT} &>>/tmp/${COMPONENT}.log
+  StatusCheck
 }
