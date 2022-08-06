@@ -13,7 +13,7 @@ DEFAULT_PASSWORD=$(grep 'A temporary password' /var/log/mysqld.log | awk '{print
 
   echo "uninstall plugin validate_password;" | mysql -uroot -p$MYSQL_PASSWORD
 
-> uninstall plugin validate_password;
+#> uninstall plugin validate_password;
 
 curl -s -L -o /tmp/mysql.zip "https://github.com/roboshop-devops-project/mysql/archive/main.zip"
 
