@@ -77,6 +77,23 @@ JAVA() {
  SYSTEMD
 }
 
+PYTHON() {
+  echo Install Python
+  yum install python36 gcc python3-devel -y &>>${LOG}
+  StatusCheck
+
+   APP_USER_SETUP
+   DOWNLOAD
+   APP_CLEAN
+
+ echo Install Python dependencies
+  cd /home/roboshop/payment && pip3 install -r requirements.txt &>>${LOG}
+  StatusCheck
+
+ SYSTEMD
+
+}
+
 USER_ID=$(id -u)
 if [ $USER_ID -ne 0 ]; then
    echo -e "\e[31m You shuould run this script as sudo or root user \e[0m"
