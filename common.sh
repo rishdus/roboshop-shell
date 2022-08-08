@@ -10,47 +10,71 @@ StatusCheck() {
   }
   DOWNLOAD() {
     echo Downloading ${COMPONENT} application content
-    curl -s -L -o /tmp/${COMPONENT}.zip "https://github.com/roboshop-devops-project/${COMPONENT}/archive/main.zip" &>>/tmp/${COMPONENT}.log
+    curl -s -L -o /tmp/${COMPONENT}.zip "https://github.com/roboshop-devops-project/${COMPONENT}/archive/main.zip" &>>${LOG}
     StatusCheck
   }
+APP_USER_SETUP(){
+    id roboshop &>>${LOG}
+    if [ $? -ne 0 ]; then
+     echo Adding application User
+       useradd roboshop &>>${LOG}
+      StatusCheck
+    fi
+}
+APP_CLEAN(){
+   echo Cleaning old application content
+   cd /home/roboshop &>>${LOG} && rm -rf ${COMPONENT} &>>${LOG}
+    StatusCheck
 
+    echo Extracting application archive
+    unzip -o /tmp/${COMPONENT}.zip &>>${LOG} && mv ${COMPONENT}-main ${COMPONENT} &>>${LOG} && cd ${COMPONENT} &>>${LOG}
+    StatusCheck
+
+}
+SYSTEMD(){
+  echo configuring ${COMPONENT} systemd service
+    mv /home/roboshop/${COMPONENT}/systemd.service /etc/systemd/system/${COMPONENT}.service &>>${LOG} && systemctl daemon-reload &>>${LOG}
+    StatusCheck
+
+    echo starting ${COMPONENT} service
+    systemctl start ${COMPONENT} &>>${LOG} && systemctl enable ${COMPONENT} &>>${LOG}
+    StatusCheck
+}
 NODEJS() {
   echo Setting nodejs repos
-  curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>/tmp/${COMPONENT}.log
+  curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
   StatusCheck
 
   echo Installing Nodejs
-  yum install nodejs -y &>>/tmp/${COMPONENT}.log
+  yum install nodejs -y &>>${LOG}
   StatusCheck
 
-  id roboshop &>>/tmp/${COMPONENT}.log
-  if [ $? -ne 0 ]; then
-   echo Adding application User
-     useradd roboshop &>>/tmp/${COMPONENT}.log
-    StatusCheck
-  fi
-
+  APP_USER_SETUP
   DOWNLOAD
-
-  echo Cleaning old application content
- cd /home/roboshop &>>/tmp/${COMPONENT}.log && rm -rf ${COMPONENT} &>>/tmp/${COMPONENT}.log
-  StatusCheck
-
-  echo Extracting application archive
-  unzip -o /tmp/${COMPONENT}.zip &>>/tmp/${COMPONENT}.log && mv ${COMPONENT}-main ${COMPONENT} &>>/tmp/${COMPONENT}.log && cd ${COMPONENT} &>>/tmp/${COMPONENT}.log
-  StatusCheck
+  APP_CLEAN
 
   echo Installing Nodejs dependencies
-  npm install &>>/tmp/${COMPONENT}.log
+  npm install &>>${LOG}
   StatusCheck
   
-  echo configuring ${COMPONENT} systemd service
-  mv /home/roboshop/${COMPONENT}/systemd.service /etc/systemd/system/${COMPONENT}.service &>>/tmp/${COMPONENT}.log && systemctl daemon-reload &>>/tmp/${COMPONENT}.log
+  SYSTEMD
+}
+
+JAVA() {
+
+  echo Install maven
+  yum install maven -y &>>${LOG}
   StatusCheck
-  
-  echo starting ${COMPONENT} service
-  systemctl start ${COMPONENT} &>>/tmp/${COMPONENT}.log && systemctl enable ${COMPONENT} &>>/tmp/${COMPONENT}.log
+
+ APP_USER_SETUP
+ DOWNLOAD
+ APP_CLEAN
+
+ echo Make Application package
+  mvn clean package &>>${LOG} && mv target/shipping-1.0.jar shipping.jar &>>${LOG}
   StatusCheck
+
+ SYSTEMD
 }
 
 USER_ID=$(id -u)
@@ -59,5 +83,5 @@ if [ $USER_ID -ne 0 ]; then
    exit 1
 fi
 
-LOG=/tmp/${COMPONENT}.log
+LOG=${LOG}
 rm -f ${LOG}
