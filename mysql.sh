@@ -34,8 +34,6 @@ if [ $? -eq 0 ]; then
 StatusCheck
 fi
 
-"uninstall plugin validate_password;" | mysql -uroot -p$MYSQL_PASSWORD
-
 exit
 
 curl -s -L -o /tmp/mysql.zip "https://github.com/roboshop-devops-project/mysql/archive/main.zip"
