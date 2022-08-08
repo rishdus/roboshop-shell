@@ -26,10 +26,10 @@ echo "alter user 'root'@'localhost' identified with mysql_native_password by '$M
 StatusCheck
 fi
 
-echo "show plugins;" | mysql -uroot -p$MYSQL_PASSWORD | grep validate_password &>>${LOG}
+echo "show plugins;" | mysql -uroot -p$MYSQL_PASSWORD 2>&1 | grep validate_password &>>${LOG}
 if [ $? -eq 0 ]; then
   echo Remove Password Validate Plugin
-  echo "uninstall plugin validate_password;" | mysql -uroot -p$MYSQL_PASSWORD
+  echo "uninstall plugin validate_password;" | mysql -uroot -p$MYSQL_PASSWORD &>>${LOG}
 
 StatusCheck
 fi
