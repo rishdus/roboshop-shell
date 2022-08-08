@@ -51,3 +51,9 @@ NODEJS() {
   systemctl start ${COMPONENT} &>>/tmp/${COMPONENT}.log && systemctl enable ${COMPONENT} &>>/tmp/${COMPONENT}.log
   StatusCheck
 }
+
+USER_ID=$(id -u)
+if [ $? -ne 0 ]; then
+     echo -e "\e[31m You shuould run this script as sudo or root user \e[0m"
+      exit 1
+ fi
