@@ -1,5 +1,8 @@
+COMPONENT=cart
+
 source common.sh
 
-COMPONENT=cart
+USER_ID
+
 NODEJS
 
