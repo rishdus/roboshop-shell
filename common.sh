@@ -94,6 +94,26 @@ PYTHON() {
 
 }
 
+GOLANG() {
+
+  echo Installing Golang
+  yum install golang -y &>>${LOG}
+  StatusCheck
+
+  DOWNLOAD
+
+  APP_USER_SETUP
+
+  APP_CLEAN
+
+  echo building Golang dependencies
+  go mod init ${COMPONENT} &>>${LOG} && go get &>>${LOG} && go build &>>${LOG}
+  StatusCheck
+
+  SYSTEMD
+
+}
+
 USER_ID=$(id -u)
 if [ $USER_ID -ne 0 ]; then
    echo -e "\e[31m You shuould run this script as sudo or root user \e[0m"
