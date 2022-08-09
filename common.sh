@@ -32,12 +32,17 @@ APP_CLEAN(){
 
 }
 SYSTEMD(){
+  echo update systemd config
+  sed -i -e 's/MONGO_DNSNAME/mongodb-dev.roboshop.internal/' /home/roboshop/${COMPONENT}.service &>>${LOG}
+  StatusCheck
+
+
   echo configuring ${COMPONENT} systemd service
     mv /home/roboshop/${COMPONENT}/systemd.service /etc/systemd/system/${COMPONENT}.service &>>${LOG} && systemctl daemon-reload &>>${LOG}
     StatusCheck
 
     echo starting ${COMPONENT} service
-    systemctl start ${COMPONENT} &>>${LOG} && systemctl enable ${COMPONENT} &>>${LOG}
+    systemctl restart ${COMPONENT} &>>${LOG} && systemctl enable ${COMPONENT} &>>${LOG}
     StatusCheck
 }
 NODEJS() {
